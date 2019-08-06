@@ -34,9 +34,13 @@ public class KsParser
 	public static void main (String[] args)  throws FileNotFoundException
 	{
 		KsParser ksp = new KsParser();
-		ksp.getParsedFiles(args[0], args[1]);
-		//ksp.test();
-	
+		
+		if(args[0].equals("stringify")) 
+		{
+			ksp.stringify(args[1]);
+		} else {
+		    ksp.getParsedFiles(args[0], args[1]);
+	    }
 	}
 	
 	
@@ -50,10 +54,13 @@ public class KsParser
 		
 	} 
 	
-	public void test() throws FileNotFoundException
+	public void stringify(String path) throws FileNotFoundException
 	{
 		Gson gson = new Gson();
-		BufferedReader bufferedReader = rks.getFiles("toParse//flami2.json");
+		BufferedReader bufferedReader = rks.getFiles(path);
+		
+		String stringified = sp.fromAscii(rks.getLetterCodes(rks.getKsData(bufferedReader, gson)));
+        System.out.println(stringified);		
 	}
 	
 }
