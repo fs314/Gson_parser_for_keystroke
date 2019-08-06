@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import com.google.gson.Gson;
@@ -29,14 +30,22 @@ public class WriteParsedKS
 		    {
 				String ppsNumber = "s" + i;
 				String originalName = filesForFolder(originalPath).get(i); 
-
-				BufferedReader bufferedReader = rks.getFiles(originalName);;
+				String ppsFolder = makePPSFolder(ppsNumber, destinationPath);
+				String fileName = ppsFolder;
 				
-				gson.toJson(sp.fromCondition(bufferedReader, gson), new FileWriter(makePPSFolder(ppsNumber, destinationPath)+"-static.json"));
-				//gson.toJson(rks.accessKsLabels(bufferedReader, gson), new FileWriter(originalName));
+				BufferedReader parsedBuffered = rks.getFiles(originalName);
+				LinkedHashMap<String, ArrayList<KeystrokeData>> fromCondition = sp.fromCondition(parsedBuffered, gson);
 				
-				//gson.toJson(sp.fromCondition(bufferedReader, gson), new FileWriter(ppsFolder+"-static.json"));
-				//gson.toJson(rks.accessKsLabels(bufferedReader, gson), new FileWriter(ppsFolder + "-" + originalName));
+				if(fromCondition.keySet().size() > 0) 
+				{
+					gson.toJson(fromCondition, new FileWriter(ppsFolder+"-static.json"));
+					fileName += "-original.json";
+				} else {
+					fileName += "-dynamic.json";
+				}
+				
+				BufferedReader originalBuffered = rks.getFiles(originalName);
+				gson.toJson(rks.accessKsLabels(originalBuffered, gson), new FileWriter(fileName));	
 		    }
 		} 
 		catch (FileNotFoundException e){e.printStackTrace();}

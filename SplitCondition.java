@@ -26,6 +26,7 @@ public class SplitCondition
 	/**
 	* 
 	* @param 
+	
 	* @return 
 	**/
 	public LinkedHashMap<String, ArrayList<KeystrokeData>> fromCondition(BufferedReader bufferedReader, Gson gson) throws IOException //fromCondition(BufferedReader bufferedReader, Gson gson) throws IOException
@@ -52,7 +53,7 @@ public class SplitCondition
 		}
 		return conditions;
 	} 
-	
+
 	
     /**
 	* 
