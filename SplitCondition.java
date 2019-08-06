@@ -71,10 +71,10 @@ public class SplitCondition
 		
 		if(minIndex != -1 && maxIndex != -1)
 		{
-			anonCode += serchString.substring(minIndex, maxIndex);
+			anonCode += serchString.substring(minIndex, maxIndex).replace("?", "").replace(" ", "");
 		} else if (minIndex !=-1 && maxIndex == -1)
 		{
-			anonCode += serchString.substring(minIndex, minIndex+9);
+			anonCode += serchString.substring(minIndex, minIndex+9).replace("?", "").replace(" ", "");
 		}
 		
 		Pattern p = Pattern.compile("code", Pattern.CASE_INSENSITIVE);

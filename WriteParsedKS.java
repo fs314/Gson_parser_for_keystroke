@@ -31,16 +31,16 @@ public class WriteParsedKS
 				String ppsNumber = "s" + i;
 				String originalName = filesForFolder(originalPath).get(i); 
 				String ppsFolder = makePPSFolder(ppsNumber, destinationPath, rks.getFiles(originalName), gson);
-				String fileName = ppsFolder;
+				String fileName = ppsFolder + "-";
 				
 				LinkedHashMap<String, ArrayList<KeystrokeData>> fromCondition = sp.fromCondition(rks.getFiles(originalName), gson);
 				
 				if(fromCondition.keySet().size() > 0) 
 				{
 					gson.toJson(fromCondition, new FileWriter(ppsFolder+"-static.json"));
-					fileName += "-original.json";
+					fileName += originalName.replace("/", "").replace(originalPath, "").replace(".json", "") + ".json";
 				} else {
-					fileName += "-dynamic.json";
+					fileName += originalName.replace("/", "").replace(originalPath, "").replace(".json", "") + "-dynamic.json";
 				}
 				
 				gson.toJson(rks.accessKsLabels(rks.getFiles(originalName), gson), new FileWriter(fileName));	
