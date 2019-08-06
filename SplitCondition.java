@@ -29,7 +29,7 @@ public class SplitCondition
 	
 	* @return 
 	**/
-	public LinkedHashMap<String, ArrayList<KeystrokeData>> fromCondition(BufferedReader bufferedReader, Gson gson) throws IOException //fromCondition(BufferedReader bufferedReader, Gson gson) throws IOException
+	public LinkedHashMap<String, ArrayList<KeystrokeData>> fromCondition(BufferedReader bufferedReader, Gson gson) throws IOException 
 	{
 		LinkedHashMap<String, ArrayList<KeystrokeData>> conditions = new LinkedHashMap<String, ArrayList<KeystrokeData>>(8);
 		ArrayList<KeystrokeData> ksData = rks.getKsData(bufferedReader, gson);
@@ -53,7 +53,37 @@ public class SplitCondition
 		}
 		return conditions;
 	} 
-
+	
+	
+   /**
+	* 
+	* @param 
+	* @return 
+	**/
+	public String getAnonCode(BufferedReader bufferedReader, Gson gson)
+	{
+		String serchString = fromAscii(rks.getLetterCodes(rks.getKsData(bufferedReader, gson)));
+		
+		String anonCode = "C";
+		int maxIndex = flagMaxIndex(serchString, "code");
+		int minIndex = flagMinIndex(serchString, "code");
+		
+		
+		if(minIndex != -1 && maxIndex != -1)
+		{
+			anonCode += serchString.substring(minIndex, maxIndex);
+		} else if (minIndex !=-1 && maxIndex == -1)
+		{
+			anonCode += serchString.substring(minIndex, minIndex+9);
+		}
+		
+		Pattern p = Pattern.compile("code", Pattern.CASE_INSENSITIVE);
+		Matcher m = p.matcher(anonCode);
+		anonCode= m.replaceAll("");
+		
+		return anonCode;
+	}
+	
 	
     /**
 	* 
@@ -154,7 +184,6 @@ public class SplitCondition
 		
 		return occ;
 	}
-	
 	
 	/**
 	* 

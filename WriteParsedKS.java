@@ -30,11 +30,10 @@ public class WriteParsedKS
 		    {
 				String ppsNumber = "s" + i;
 				String originalName = filesForFolder(originalPath).get(i); 
-				String ppsFolder = makePPSFolder(ppsNumber, destinationPath);
+				String ppsFolder = makePPSFolder(ppsNumber, destinationPath, rks.getFiles(originalName), gson);
 				String fileName = ppsFolder;
 				
-				BufferedReader parsedBuffered = rks.getFiles(originalName);
-				LinkedHashMap<String, ArrayList<KeystrokeData>> fromCondition = sp.fromCondition(parsedBuffered, gson);
+				LinkedHashMap<String, ArrayList<KeystrokeData>> fromCondition = sp.fromCondition(rks.getFiles(originalName), gson);
 				
 				if(fromCondition.keySet().size() > 0) 
 				{
@@ -44,8 +43,7 @@ public class WriteParsedKS
 					fileName += "-dynamic.json";
 				}
 				
-				BufferedReader originalBuffered = rks.getFiles(originalName);
-				gson.toJson(rks.accessKsLabels(originalBuffered, gson), new FileWriter(fileName));	
+				gson.toJson(rks.accessKsLabels(rks.getFiles(originalName), gson), new FileWriter(fileName));	
 		    }
 		} 
 		catch (FileNotFoundException e){e.printStackTrace();}
@@ -82,9 +80,9 @@ public class WriteParsedKS
 	* @param 
 	* @return 
 	**/
-	public String makePPSFolder(String ppsNumber, String destinationPath) 
+	public String makePPSFolder(String ppsNumber, String destinationPath, BufferedReader bufferedReader, Gson gson) 
 	{
-		File dir = new File(destinationPath + "//" + ppsNumber);
+		File dir = new File(destinationPath + "//" + ppsNumber + sp.getAnonCode(bufferedReader, gson));
 		dir.mkdir(); 
 		
 		String newFilename= dir.getAbsolutePath() + "//" + ppsNumber;
