@@ -3,6 +3,7 @@ import java.util.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -30,7 +31,10 @@ public class WriteParsedKS
 	{
 		try 
 		{
-	        Gson gson = new Gson();
+			GsonBuilder gsonBuilder = new GsonBuilder();  
+            gsonBuilder.setLenient();  
+            Gson gson = gsonBuilder.create();
+	        //Gson gson = new Gson();
 			
 			for(int i=0; i< filesForFolder(originalPath).size(); i++)
 		    {
@@ -45,8 +49,13 @@ public class WriteParsedKS
 				if(fromCondition.keySet().size() > 0) 
 				{
 					copyFile(originalName, fileName + originalName.replace("/", "").replace(originalPath, ""));
-					gson.toJson(fromCondition, new FileWriter(ppsFolder+"-static.json"));
-					fileName += originalName.replace("/", "").replace(originalPath, "").replace(".json", "") + ".json";
+					
+					try (Writer writer = new FileWriter(ppsFolder+"-static.json")) {
+						gson.toJson(fromCondition, writer);
+						writer.close();
+					}
+					
+					//fileName += originalName.replace("/", "").replace(originalPath, "").replace(".json", "") + ".json";
 					
 				} else {
 					

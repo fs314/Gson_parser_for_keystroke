@@ -1,6 +1,7 @@
 //package io.github.fs314.KsParser;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import javax.json.JsonReader;
 import java.io.*;
@@ -76,7 +77,10 @@ public class KsParser
 	{
 		for (int i=0; i<sp.getFlags().size(); i++) 
 		{
-			Gson gson = new Gson();
+			GsonBuilder gsonBuilder = new GsonBuilder();  
+            gsonBuilder.setLenient();  
+            Gson gson = gsonBuilder.create();
+			//Gson gson = new Gson();
 			System.out.println(" ");
 			System.out.println("CONDITION " + sp.getFlags().get(i));
 			System.out.println(sp.flagDelimiter(sp.fromAscii(rks.getLetterCodes(rks.getKsData (rks.getFiles(filename), gson))), sp.getFlags().get(i)));
@@ -90,7 +94,10 @@ public class KsParser
 	**/
 	public void printContent(String filename) throws FileNotFoundException
 	{
-		Gson gson = new Gson();
+		GsonBuilder gsonBuilder = new GsonBuilder();  
+        gsonBuilder.setLenient();  
+        Gson gson = gsonBuilder.create();
+		//Gson gson = new Gson();
 		System.out.println(" ");
 		System.out.println(sp.fromAscii(rks.getLetterCodes(rks.getKsData (rks.getFiles(filename), gson)))); 
 	} 
