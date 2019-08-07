@@ -47,6 +47,12 @@ public class KeystrokeData{
     @SerializedName("vectorCoord")
     @Expose
     private String vectorCoord;
+	@SerializedName("vectorCoordX")
+    @Expose
+    private Integer vectorCoordX;
+    @SerializedName("vectorCoordY")
+    @Expose
+    private Integer vectorCoordY;
 
     public Double getKeyReleaseDelay() {
         return keyReleaseDelay;
@@ -158,6 +164,22 @@ public class KeystrokeData{
 
     public void setVectorCoord(String vectorCoord) {
         this.vectorCoord = vectorCoord;
+    }
+		
+    public Integer getVectorCoordX() {
+        return vectorCoordX;
+    }
+
+    public void setVectorCoordX(Integer vectorCoordX) {
+        this.vectorCoordX = vectorCoordX;
+    }
+
+    public Integer getVectorCoordY() {
+        return vectorCoordY;
+    }
+
+    public void setVectorCoordY(Integer vectorCoordY) {
+        this.vectorCoordY = vectorCoordY;
     }
 
 }
