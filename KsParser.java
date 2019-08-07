@@ -25,6 +25,7 @@ public class KsParser
 		rks = new ReadKSFile();
 		sp = new SplitCondition();
 		wp = new WriteParsedKS();
+		
 	} 
 	
 	/**
@@ -34,16 +35,14 @@ public class KsParser
 	public static void main (String[] args)  throws FileNotFoundException
 	{
 		KsParser ksp = new KsParser();
-		
-		if(args[0].equals("stringify")) 
-		{
-			ksp.stringify(args[1]);
-		} else {
-		    ksp.getParsedFiles(args[0], args[1]);
-	    }
+	
+		ksp.getParsedFiles(args[0], args[1]);
 	}
 	
-	
+	/**
+	* Main method. 
+	* @param 
+	**/
 	public void getParsedFiles(String originalPath, String destinationPath) 
 	{
 		try{
@@ -54,13 +53,14 @@ public class KsParser
 		
 	} 
 	
-	public void stringify(String path) throws FileNotFoundException
+	/**
+	* Main method. 
+	* @param 
+	**/
+	/*
+	public void stringify() throws FileNotFoundException
 	{
-		Gson gson = new Gson();
-		BufferedReader bufferedReader = rks.getFiles(path);
 		
-		String stringified = sp.fromAscii(rks.getLetterCodes(rks.getKsData(bufferedReader, gson)));
-        System.out.println(stringified);		
-	}
+	} */
 	
 }
