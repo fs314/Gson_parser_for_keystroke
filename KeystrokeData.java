@@ -7,7 +7,10 @@ public class KeystrokeData{
 
     @SerializedName("KeyReleaseDelay")
     @Expose
-    private Double keyReleaseDelay;
+	private Double keyReleaseDelay;
+	@SerializedName("NoKeyPressDelay")
+    @Expose
+	private Double noKeyPressDelay;
     @SerializedName("primaryCode")
     @Expose
     private Integer primaryCode;
@@ -60,6 +63,14 @@ public class KeystrokeData{
 
     public void setKeyReleaseDelay(Double keyReleaseDelay) {
         this.keyReleaseDelay = keyReleaseDelay;
+    }
+	
+	public Double getNoKeyPressDelay() {
+        return noKeyPressDelay;
+    }
+
+    public void setNoKeyPressDelay(Double noKeyPressDelay) {
+        this.noKeyPressDelay = noKeyPressDelay;
     }
 
     public Integer getPrimaryCode() {

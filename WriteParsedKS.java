@@ -49,13 +49,12 @@ public class WriteParsedKS
 				if(fromCondition.keySet().size() > 0) 
 				{
 					copyFile(originalName, fileName + originalName.replace("/", "").replace(originalPath, ""));
+					fileName += originalName.replace("/", "").replace(originalPath, "").replace(".json", "") + ".json"; //movedhere
 					
 					try (Writer writer = new FileWriter(ppsFolder+"-static.json")) {
 						gson.toJson(fromCondition, writer);
 						writer.close();
 					}
-					
-					//fileName += originalName.replace("/", "").replace(originalPath, "").replace(".json", "") + ".json";
 					
 				} else {
 					
