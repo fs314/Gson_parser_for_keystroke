@@ -4,6 +4,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import com.google.gson.Gson;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.*;
+
 public class WriteParsedKS 
 {
 	ReadKSFile rks;
@@ -33,17 +39,21 @@ public class WriteParsedKS
 				String ppsFolder = makePPSFolder(ppsNumber, destinationPath, rks.getFiles(originalName), gson);
 				String fileName = ppsFolder + "-";
 				
-				LinkedHashMap<String, ArrayList<KeystrokeData>> fromCondition = sp.fromCondition(rks.getFiles(originalName), gson);
+				//copyFile(originalName, fileName + originalName.replace("/", "").replace(originalPath, ""));
 				
+				LinkedHashMap<String, ArrayList<KeystrokeData>> fromCondition = sp.fromCondition(rks.getFiles(originalName), gson);
 				if(fromCondition.keySet().size() > 0) 
 				{
+					copyFile(originalName, fileName + originalName.replace("/", "").replace(originalPath, ""));
 					gson.toJson(fromCondition, new FileWriter(ppsFolder+"-static.json"));
 					fileName += originalName.replace("/", "").replace(originalPath, "").replace(".json", "") + ".json";
+					
 				} else {
+					
 					fileName += originalName.replace("/", "").replace(originalPath, "").replace(".json", "") + "-dynamic.json";
+				    copyFile(originalName, fileName);
 				}
-				
-				gson.toJson(rks.accessKsLabels(rks.getFiles(originalName), gson), new FileWriter(fileName));	
+				System.out.println("parsed file at: " + fileName);
 		    }
 		} 
 		catch (FileNotFoundException e){e.printStackTrace();}
@@ -88,4 +98,17 @@ public class WriteParsedKS
 		String newFilename= dir.getAbsolutePath() + "//" + ppsNumber;
 		return newFilename;
 	}
+	
+	
+	/**
+	* 
+	* @param 
+	* @return 
+	**/
+	 public void copyFile(String from, String to) throws IOException{
+        Path src = Paths.get(from);
+        Path dest = Paths.get(to);
+        Files.copy(src, dest, StandardCopyOption.REPLACE_EXISTING);
+    }
+	
 }
