@@ -35,7 +35,7 @@ public class ReadKSFile
 	* @param 
 	* @return 
 	**/
-	public ArrayList<KeystrokeData> getKsData (BufferedReader bufferedReader, Gson gson) //LinkedHashMap<String, List<KeystrokeData>> ksLabels
+	public ArrayList<KeystrokeData> getKsData (BufferedReader bufferedReader, Gson gson) 
 	{
 		LinkedHashMap<String, ArrayList<KeystrokeData>> ksLabels = accessKsLabels(bufferedReader, gson);  //changes
 		

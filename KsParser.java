@@ -52,7 +52,8 @@ public class KsParser
 			System.out.println("PARSE JSON: -pr FromFolder  ToFolder");
 			System.out.println("HELP: -hp to know how the parser works");
 			System.out.println(" ");
-		}
+		} 
+		
 	}
 	
 	/**
@@ -80,7 +81,7 @@ public class KsParser
 			GsonBuilder gsonBuilder = new GsonBuilder();  
             gsonBuilder.setLenient();  
             Gson gson = gsonBuilder.create();
-			//Gson gson = new Gson();
+	
 			System.out.println(" ");
 			System.out.println("CONDITION " + sp.getFlags().get(i));
 			System.out.println(sp.flagDelimiter(sp.fromAscii(rks.getLetterCodes(rks.getKsData (rks.getFiles(filename), gson))), sp.getFlags().get(i)));
@@ -97,9 +98,18 @@ public class KsParser
 		GsonBuilder gsonBuilder = new GsonBuilder();  
         gsonBuilder.setLenient();  
         Gson gson = gsonBuilder.create();
-		//Gson gson = new Gson();
+
 		System.out.println(" ");
 		System.out.println(sp.fromAscii(rks.getLetterCodes(rks.getKsData (rks.getFiles(filename), gson)))); 
+	} 
+	
+
+	public void test () throws FileNotFoundException
+	{
+		GsonBuilder gsonBuilder = new GsonBuilder();  
+        gsonBuilder.setLenient();  
+        Gson gson = gsonBuilder.create();
+		System.out.println(sp.getValidFlags(sp.fromAscii(rks.getLetterCodes(rks.getKsData (rks.getFiles("try/s32Ccoa11/s32--1697865643kspattern.json"), gson))))); 
 	} 
 	
 }

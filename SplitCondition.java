@@ -9,6 +9,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.io.*;
 import java.io.IOException;
+import com.google.common.collect.*;
 
 import java.io.BufferedReader;
 
@@ -27,7 +28,102 @@ public class SplitCondition
 	/**
 	* 
 	* @param 
+	* @return 
+	**/
 	
+	public MapDifference<String, ArrayList<KeystrokeData>> fromDynamic(LinkedHashMap<String, ArrayList<KeystrokeData>> fromCondition, BufferedReader bufferedReader, Gson gson) 
+	{
+		LinkedHashMap<String, ArrayList<KeystrokeData>>  dynamicData = new LinkedHashMap<String, ArrayList<KeystrokeData>>(); 
+        ArrayList<KeystrokeData> dynamicKS = new  ArrayList<KeystrokeData>();
+		
+		ArrayList<KeystrokeData> ksData = rks.getKsData(bufferedReader, gson);
+		ArrayList<KeystrokeData> conditionData = getConditionData(fromCondition); 
+		//LinkedHashMap<String, ArrayList<KeystrokeData>> ksDataMap = new LinkedHashMap<String, ArrayList<KeystrokeData>>();
+		ksDataMap.put("data", rks.getKsData(bufferedReader, gson));
+	    //LinkedHashMap<String, ArrayList<KeystrokeData>> conditionMap = new LinkedHashMap<String, ArrayList<KeystrokeData>>();
+		conditionMap.put("data", getConditionData(fromCondition));
+	    
+		/*
+		 Staff staff = createStaffObject();
+        // Java objects to String
+        // String json = gson.toJson(staff);
+		*/
+        Type mapType = new TypeToken<LinkedHashMap<String, ArrayList<KeystrokeData>> >() {}.getType();
+	
+        LinkedHashMap<String, ArrayList<KeystrokeData>> ksDataMap = gson.fromJson(ksDataMap, mapType);
+        LinkedHashMap<String, ArrayList<KeystrokeData>> conditionMap = gson.fromJson(conditionMap, mapType);
+		
+		LinkedHashMap<String, ArrayList<KeystrokeData>> difference = Maps.difference(ksDataMap, conditionMap);
+		
+		return difference;
+	}
+	
+	
+	/*
+	public LinkedHashMap<String, ArrayList<KeystrokeData>>  fromDynamic(BufferedReader bufferedReader, Gson gson) throws IOException 
+	{
+		LinkedHashMap<String, ArrayList<KeystrokeData>>  dynamicData = new LinkedHashMap<String, ArrayList<KeystrokeData>>(); 
+        ArrayList<KeystrokeData> dynamicKS = new  ArrayList<KeystrokeData>();
+		
+		ArrayList<KeystrokeData> ksData = rks.getKsData(bufferedReader, gson);
+		String serchString = fromAscii(rks.getLetterCodes(ksData));
+		LinkedHashMap<String, ArrayList<Integer>> validFlags = getValidFlags(serchString); 
+		
+		int maxIndexPrev = 0;
+		if(validFlags.get("minIdx").size() !=0 && validFlags.get("maxIdx").size() !=0)
+		{
+			for(int i=0; i<validFlags.get("minIdx").size(); i++) 
+		    {
+			    int minIndex = validFlags.get("minIdx").get(i);
+			    int maxIndex = validFlags.get("maxIdx").get(i);
+			
+			    if(i==0 && minIndex>0)
+			    {
+					for(int index=0; index<minIndex; index++)
+					{
+						dynamicKS.add(ksData.get(index));
+					    maxIndexPrev =  maxIndex;
+				    }
+			    } else if(i==validFlags.get("maxIdx").size()-1 && validFlags.get("maxIdx").get(i)<serchString.length()) {
+					for(int index=validFlags.get("maxIdx").get(i); index<serchString.length(); index++)
+				    {
+						dynamicKS.add(ksData.get(index));
+				    }
+			    } else {
+					for(int index=maxIndexPrev; index<minIndex; index++)
+					{
+						dynamicKS.add(ksData.get(index));
+						maxIndexPrev =  maxIndex;
+				    }
+			    }
+		    }
+		}
+		dynamicData.put("dynamicKS", dynamicKS);
+		return dynamicData;
+	} */
+
+   /**
+	* 
+	* @param 
+	* @return 
+	**/
+     public ArrayList<KeystrokeData> getConditionData(LinkedHashMap<String, ArrayList<KeystrokeData>> fromCondition) 
+	 {
+		 ArrayList<KeystrokeData> conditionData = new ArrayList<KeystrokeData>();
+		 
+		 for(String key: fromCondition.keySet())
+		 {
+			for(int i=0; i<fromCondition.get(key).size(); i++)
+			{
+				conditionData.add(fromCondition.get(key).get(i));
+			} 
+		 }
+		 return conditionData;
+	 }
+	 
+	/**
+	* 
+	* @param 
 	* @return 
 	**/
 	public LinkedHashMap<String, ArrayList<KeystrokeData>> fromCondition(BufferedReader bufferedReader, Gson gson) throws IOException 
@@ -85,6 +181,63 @@ public class SplitCondition
 		return anonCode;
 	}
 	
+   /**
+	* 
+	* @param 
+	* @return 
+	**/
+	public LinkedHashMap<String, ArrayList<Integer>> getValidFlags(String fromAscii) 
+	{
+		LinkedHashMap<String, ArrayList<Integer>> validFlags = new LinkedHashMap<String, ArrayList<Integer>>();
+		
+		ArrayList<Integer> minIdxs = new ArrayList<Integer>();
+		ArrayList<Integer> maxIdxs = new ArrayList<Integer>();
+		for (int i=0; i< getFlags().size(); i++) 
+		{
+			int maxIndex = flagMaxIndex(fromAscii, getFlags().get(i));
+		    int minIndex = flagMinIndex(fromAscii, getFlags().get(i));
+		
+		    if(maxIndex !=0) 
+		    {
+				minIdxs.add(minIndex);
+				maxIdxs.add(maxIndex);
+		    }
+		}
+		
+		validFlags.put("minIdx", sortAscending(minIdxs));
+		validFlags.put("maxIdx", sortAscending(maxIdxs));
+
+		return validFlags;
+	}
+	
+	/**
+	* 
+	* @param 
+	* @return 
+	**/
+	public ArrayList<Integer> sortAscending(ArrayList<Integer> indexes)
+	{
+		ArrayList<Integer> ascendingIdxs = new ArrayList<Integer>();
+		
+		while(indexes.size() > 0)
+		{
+			int minIndex = 0;
+			for(int i=0; i< indexes.size(); i++)
+		    {
+				int currIndex = indexes.get(i);
+				if(i==0)
+				{
+					minIndex = currIndex;
+				} else if (currIndex< minIndex){
+					minIndex = currIndex;
+			    }
+		    }
+			
+			ascendingIdxs.add(minIndex);
+			indexes.remove(Integer.valueOf(minIndex));
+		}
+    return ascendingIdxs;
+	}
 	
     /**
 	* 
@@ -167,6 +320,7 @@ public class SplitCondition
 		}
 		return maxIndex;
 	}
+
 	
 	/**
 	* 

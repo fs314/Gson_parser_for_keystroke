@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.*;
+import com.google.common.collect.*;
 
 public class WriteParsedKS 
 {
@@ -43,18 +44,17 @@ public class WriteParsedKS
 				String ppsFolder = makePPSFolder(ppsNumber, destinationPath, rks.getFiles(originalName), gson);
 				String fileName = ppsFolder + "-";
 				
-				//copyFile(originalName, fileName + originalName.replace("/", "").replace(originalPath, ""));
-				
 				LinkedHashMap<String, ArrayList<KeystrokeData>> fromCondition = sp.fromCondition(rks.getFiles(originalName), gson);
+				MapDifference<DynamicData, ArrayList<KeystrokeData>> dynamicData = sp.fromDynamic(fromCondition, rks.getFiles(originalName), gson);
+				
 				if(fromCondition.keySet().size() > 0) 
 				{
 					copyFile(originalName, fileName + originalName.replace("/", "").replace(originalPath, ""));
-					fileName += originalName.replace("/", "").replace(originalPath, "").replace(".json", "") + ".json"; //movedhere
 					
-					try (Writer writer = new FileWriter(ppsFolder+"-static.json")) {
-						gson.toJson(fromCondition, writer);
-						writer.close();
-					}
+					fileName += originalName.replace("/", "").replace(originalPath, "").replace(".json", "") + ".json"; //movedhere
+				
+					writer(fromCondition, ppsFolder+"-static.json", gson);
+					writer(dynamicData, ppsFolder+"-dynamic.json", gson);
 					
 				} else {
 					
@@ -69,6 +69,21 @@ public class WriteParsedKS
 		catch (Exception e){e.printStackTrace();}
 		
 	} 
+	
+   /**
+	* 
+	* @param 
+	* @return 
+	**/
+	public void writer(Object obj, String filename, Gson gson) 
+	{
+		try (Writer writer = new FileWriter(filename)) {
+			gson.toJson(obj, writer);
+			writer.close();
+		}
+		catch (FileNotFoundException e){e.printStackTrace();}
+		catch (Exception e){e.printStackTrace();}
+	}
 	
 	
 	/**
