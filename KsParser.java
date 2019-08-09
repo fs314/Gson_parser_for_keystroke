@@ -27,33 +27,34 @@ public class KsParser
 		rks = new ReadKSFile();
 		sp = new SplitCondition();
 		wp = new WriteParsedKS();
-		
-	
 	} 
 	
 	/**
 	* Main method. 
 	* @param 
 	**/
-	public static void main (String[] args)  throws FileNotFoundException
+	public static void main (String[] args) throws IOException
 	{
 		KsParser ksp = new KsParser();
-	    
+		
 		if(args[0].equals("-tr")){
 			ksp.printContent(args[1]);
 		} else if (args[0].equals("-pr")){
 		    ksp.getParsedFiles(args[1], args[2]);
 		} else if (args[0].equals("-sc")){
 			ksp.showConditions(args[1]);
+		}else if(args[0].equals("-add")){
+			ksp.addCondition(args[1], args[2], args[3], args[4]); 
 		} else if(args[0].equals("-hp")){
 			System.out.println(" ");
 			System.out.println("TRANSLATE JSON: -tr NameOfFileToTranslate");
 			System.out.println("SHOW CONDITIONS: -sc NameOfFileToTranslate");
 			System.out.println("PARSE JSON: -pr FromFolder  ToFolder");
+			System.out.println("ADD CONDITION: -add Filename, StartFrom, EndAt, ToCondition");
 			System.out.println("HELP: -hp to know how the parser works");
 			System.out.println(" ");
-		} 
-		
+		}  
+		//ksp.test();
 	}
 	
 	/**
@@ -103,13 +104,25 @@ public class KsParser
 		System.out.println(sp.fromAscii(rks.getLetterCodes(rks.getKsData (rks.getFiles(filename), gson)))); 
 	} 
 	
-
-	public void test () throws FileNotFoundException
+	/**
+	* Main method. 
+	* @param 
+	**/
+	public void addCondition (String filename, String startFrom, String endAt, String toCondition) throws IOException
 	{
-		GsonBuilder gsonBuilder = new GsonBuilder();  
-        gsonBuilder.setLenient();  
-        Gson gson = gsonBuilder.create();
-		System.out.println(sp.getValidFlags(sp.fromAscii(rks.getLetterCodes(rks.getKsData (rks.getFiles("try/s32Ccoa11/s32--1697865643kspattern.json"), gson))))); 
-	} 
+		wp.modifyParsedKS(filename, startFrom, endAt, toCondition);
+	}
+	
+	
+	/*
+	public void test()throws IOException
+	{
+		ArrayList<KeystrokeData> ks = sp.getCond("browncfox", "dogGdue", "GDYESVD", rks.getFiles("try/s4C/s4--1659614824kspattern.json"));
+		String serchString = sp.fromAscii(rks.getLetterCodes(ks));
+		System.out.println(serchString);
+		
+	} */
+	
+
 	
 }

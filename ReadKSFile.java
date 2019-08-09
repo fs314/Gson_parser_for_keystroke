@@ -37,30 +37,27 @@ public class ReadKSFile
 	**/
 	public ArrayList<KeystrokeData> getKsData (BufferedReader bufferedReader, Gson gson) 
 	{
-		LinkedHashMap<String, ArrayList<KeystrokeData>> ksLabels = accessKsLabels(bufferedReader, gson);  //changes
+		LinkedHashMap<String, ArrayList<KeystrokeData>> ksLabels = accessKsLabels(bufferedReader, gson);  
 		
 		ArrayList<KeystrokeData>  ksData = new ArrayList<KeystrokeData>();
 		
 		for (String key: ksLabels.keySet()) 
 		{
-			//System.out.println(key);
-			
 			for(int i=0; i<ksLabels.get(key).size(); i++)
 			{
-				//System.out.println(i);
 				ksData.add(ksLabels.get(key).get(i));
 			} 
 		}
-		
 		return ksData;
 	}
+	
 	
 	/**
 	* 
 	* @param 
 	* @return 
 	**/
-	public LinkedHashMap<String, ArrayList<KeystrokeData>> accessKsLabels (BufferedReader bufferedReader, Gson gson) 
+	public LinkedHashMap<String, ArrayList<KeystrokeData>> accessKsLabels(BufferedReader bufferedReader, Gson gson) 
 	{
 		 Type mapType = new TypeToken<LinkedHashMap<String, ArrayList<KeystrokeData>> >() {}.getType();
          LinkedHashMap<String, ArrayList<KeystrokeData>> ksLabels = gson.fromJson(bufferedReader, mapType); 

@@ -23,6 +23,19 @@ public class WriteParsedKS
 		sp = new SplitCondition();
 	}
 	
+	public void modifyParsedKS(String filename, String startFrom, String endAt, String toCondition) throws IOException
+	{
+		GsonBuilder gsonBuilder = new GsonBuilder();  
+        gsonBuilder.setLenient();  
+        Gson gson = gsonBuilder.create();
+		
+		LinkedHashMap<String, ArrayList<KeystrokeData>> conditions = sp.fromCondition(rks.getFiles(filename), gson);
+		conditions.put(toCondition, sp.getCond(startFrom, endAt, rks.getFiles(filename)));
+		
+		writer(conditions, filename.replace("kspattern","MOD"), gson);
+	}
+	
+	
 	/**
 	* 
 	* @param 
@@ -35,7 +48,6 @@ public class WriteParsedKS
 			GsonBuilder gsonBuilder = new GsonBuilder();  
             gsonBuilder.setLenient();  
             Gson gson = gsonBuilder.create();
-	        //Gson gson = new Gson();
 			
 			for(int i=0; i< filesForFolder(originalPath).size(); i++)
 		    {
@@ -45,8 +57,7 @@ public class WriteParsedKS
 				String fileName = ppsFolder + "-";
 				
 				LinkedHashMap<String, ArrayList<KeystrokeData>> fromCondition = sp.fromCondition(rks.getFiles(originalName), gson);
-				MapDifference<DynamicData, ArrayList<KeystrokeData>> dynamicData = sp.fromDynamic(fromCondition, rks.getFiles(originalName), gson);
-				
+				LinkedHashMap<String, ArrayList<KeystrokeData>> dynamicData = sp.fromDynamic(rks.getFiles(originalName), gson);
 				if(fromCondition.keySet().size() > 0) 
 				{
 					copyFile(originalName, fileName + originalName.replace("/", "").replace(originalPath, ""));

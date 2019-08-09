@@ -24,46 +24,41 @@ public class SplitCondition
 	{
 		rks = new ReadKSFile();
 	}
+
+    //indicate 2 strings - startFrom and endAt - which the parser will interpret as new flags and use to delimit the space to include in 
+	//condition or dynamic -RETURN ArrayList<KeystrokeData> instead???
+    public ArrayList<KeystrokeData> getCond(String startFrom, String endAt, BufferedReader bufferedReader) throws IOException 
+	{
+	   GsonBuilder gsonBuilder = new GsonBuilder();  
+       gsonBuilder.setLenient();  
+       Gson gson = gsonBuilder.create();
+	   
+	   ArrayList<KeystrokeData> ksData = rks.getKsData(bufferedReader, gson);
+	   String serchString = fromAscii(rks.getLetterCodes(ksData));
+	   ArrayList<KeystrokeData> ksByCondition = new ArrayList<KeystrokeData>();
+	   
+	   int minIndex = flagMinIndex(serchString, startFrom);
+	   int maxIndex = flagMaxIndex(serchString, endAt);
+	   
+	   for(int index = minIndex; index< maxIndex; index++)
+	   {
+		   ksByCondition.add(ksData.get(index));
+	   }
+
+	   return ksByCondition;
+	}
 	
 	/**
 	* 
 	* @param 
 	* @return 
 	**/
-	
-	public MapDifference<String, ArrayList<KeystrokeData>> fromDynamic(LinkedHashMap<String, ArrayList<KeystrokeData>> fromCondition, BufferedReader bufferedReader, Gson gson) 
+	public LinkedHashMap<String, ArrayList<KeystrokeData>> fromDynamic(BufferedReader bufferedReader, Gson gson) throws IOException 
 	{
+		//results
 		LinkedHashMap<String, ArrayList<KeystrokeData>>  dynamicData = new LinkedHashMap<String, ArrayList<KeystrokeData>>(); 
         ArrayList<KeystrokeData> dynamicKS = new  ArrayList<KeystrokeData>();
 		
-		ArrayList<KeystrokeData> ksData = rks.getKsData(bufferedReader, gson);
-		ArrayList<KeystrokeData> conditionData = getConditionData(fromCondition); 
-		//LinkedHashMap<String, ArrayList<KeystrokeData>> ksDataMap = new LinkedHashMap<String, ArrayList<KeystrokeData>>();
-		ksDataMap.put("data", rks.getKsData(bufferedReader, gson));
-	    //LinkedHashMap<String, ArrayList<KeystrokeData>> conditionMap = new LinkedHashMap<String, ArrayList<KeystrokeData>>();
-		conditionMap.put("data", getConditionData(fromCondition));
-	    
-		/*
-		 Staff staff = createStaffObject();
-        // Java objects to String
-        // String json = gson.toJson(staff);
-		*/
-        Type mapType = new TypeToken<LinkedHashMap<String, ArrayList<KeystrokeData>> >() {}.getType();
-	
-        LinkedHashMap<String, ArrayList<KeystrokeData>> ksDataMap = gson.fromJson(ksDataMap, mapType);
-        LinkedHashMap<String, ArrayList<KeystrokeData>> conditionMap = gson.fromJson(conditionMap, mapType);
-		
-		LinkedHashMap<String, ArrayList<KeystrokeData>> difference = Maps.difference(ksDataMap, conditionMap);
-		
-		return difference;
-	}
-	
-	
-	/*
-	public LinkedHashMap<String, ArrayList<KeystrokeData>>  fromDynamic(BufferedReader bufferedReader, Gson gson) throws IOException 
-	{
-		LinkedHashMap<String, ArrayList<KeystrokeData>>  dynamicData = new LinkedHashMap<String, ArrayList<KeystrokeData>>(); 
-        ArrayList<KeystrokeData> dynamicKS = new  ArrayList<KeystrokeData>();
 		
 		ArrayList<KeystrokeData> ksData = rks.getKsData(bufferedReader, gson);
 		String serchString = fromAscii(rks.getLetterCodes(ksData));
@@ -74,33 +69,32 @@ public class SplitCondition
 		{
 			for(int i=0; i<validFlags.get("minIdx").size(); i++) 
 		    {
-			    int minIndex = validFlags.get("minIdx").get(i);
-			    int maxIndex = validFlags.get("maxIdx").get(i);
+			    int minIndexCurr = validFlags.get("minIdx").get(i);
+			    int maxIndexCurr = validFlags.get("maxIdx").get(i);
 			
-			    if(i==0 && minIndex>0)
+			    if(i==0 && minIndexCurr>0)
 			    {
-					for(int index=0; index<minIndex; index++)
+					for(int index=0; index<minIndexCurr; index++)
 					{
 						dynamicKS.add(ksData.get(index));
-					    maxIndexPrev =  maxIndex;
-				    }
-			    } else if(i==validFlags.get("maxIdx").size()-1 && validFlags.get("maxIdx").get(i)<serchString.length()) {
-					for(int index=validFlags.get("maxIdx").get(i); index<serchString.length(); index++)
+				    }	
+				} else if(i==validFlags.get("maxIdx").size()-1 && maxIndexCurr<serchString.length()) {
+					for(int index=maxIndexCurr; index<serchString.length(); index++)
 				    {
 						dynamicKS.add(ksData.get(index));
 				    }
-			    } else {
-					for(int index=maxIndexPrev; index<minIndex; index++)
+			    } else if (i!=0 && minIndexCurr!=0){
+					for(int index=maxIndexPrev; index<minIndexCurr; index++)
 					{
 						dynamicKS.add(ksData.get(index));
-						maxIndexPrev =  maxIndex;
 				    }
 			    }
+				 maxIndexPrev =  maxIndexCurr;
 		    }
 		}
 		dynamicData.put("dynamicKS", dynamicKS);
 		return dynamicData;
-	} */
+	} 
 
    /**
 	* 
