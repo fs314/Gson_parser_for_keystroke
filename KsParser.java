@@ -45,12 +45,15 @@ public class KsParser
 			ksp.showConditions(args[1]);
 		}else if(args[0].equals("-add")){
 			ksp.addCondition(args[1], args[2], args[3], args[4]); 
+		}else if (args[0].equals("-rm")){
+			ksp.removeCondition(args[1], args[2], args[3], args[4]);
 		} else if(args[0].equals("-hp")){
 			System.out.println(" ");
 			System.out.println("TRANSLATE JSON: -tr NameOfFileToTranslate");
 			System.out.println("SHOW CONDITIONS: -sc NameOfFileToTranslate");
 			System.out.println("PARSE JSON: -pr FromFolder  ToFolder");
-			System.out.println("ADD CONDITION: -add Filename, StartFrom, EndAt, ToCondition");
+			System.out.println("ADD CONDITION: -add Filename StartFrom EndAt ToCondition");
+			System.out.println("REMOVE FROM CONDITION: -rm Filename Flag StartFrom EndAt");
 			System.out.println("HELP: -hp to know how the parser works");
 			System.out.println(" ");
 		}  
@@ -111,6 +114,15 @@ public class KsParser
 	public void addCondition (String filename, String startFrom, String endAt, String toCondition) throws IOException
 	{
 		wp.modifyParsedKS(filename, startFrom, endAt, toCondition);
+	}
+	
+	/**
+	* Main method. 
+	* @param 
+	**/
+	public void removeCondition(String filename, String flag, String startFrom, String endAt) throws IOException
+	{
+		wp.deleteFromCond(filename, flag, startFrom, endAt);
 	}
 	
 	

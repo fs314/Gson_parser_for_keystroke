@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -23,6 +25,34 @@ public class WriteParsedKS
 		sp = new SplitCondition();
 	}
 	
+	/**
+	* 
+	* @param 
+	* @return 
+	**/
+	public void deleteFromCond(String filename, String flag, String startFrom, String endAt) throws IOException
+	{
+		GsonBuilder gsonBuilder = new GsonBuilder();  
+        gsonBuilder.setLenient();  
+        Gson gson = gsonBuilder.create();
+		
+		Type mapType = new TypeToken<LinkedHashMap<String, ArrayList<KeystrokeData>> >() {}.getType();
+		LinkedHashMap<String, ArrayList<KeystrokeData>> conditions = gson.fromJson(rks.getFiles(filename), mapType); 
+		//LinkedHashMap<String, ArrayList<KeystrokeData>> conditions = sp.fromCondition(rks.getFiles(filename), gson);
+		ArrayList<KeystrokeData> condition = conditions.get(flag);
+		Object value = conditions.remove(flag);
+		
+		ArrayList<KeystrokeData> newCondition = sp.deleteFrom(condition, startFrom, endAt);
+		conditions.put(flag, newCondition);
+		
+		writer(conditions, filename.replace(".json","-MOD.json"), gson);
+	}
+	
+	/**
+	* 
+	* @param 
+	* @return 
+	**/
 	public void modifyParsedKS(String filename, String startFrom, String endAt, String toCondition) throws IOException
 	{
 		GsonBuilder gsonBuilder = new GsonBuilder();  

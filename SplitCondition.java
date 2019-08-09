@@ -24,10 +24,39 @@ public class SplitCondition
 	{
 		rks = new ReadKSFile();
 	}
+	
+	/**
+	* 
+	* @param 
+	* @return 
+	**/
+	public ArrayList<KeystrokeData> deleteFrom(ArrayList<KeystrokeData> condition, String startFrom, String endAt)
+	{
+	   String serchString = fromAscii(rks.getLetterCodes(condition));
+	   int minIndex = flagMinIndex(serchString, startFrom);
+	   int maxIndex = flagMaxIndex(serchString, endAt);
+	  
+        	  
+	   for(int index = minIndex; index<maxIndex; index++)
+	   {
+		   if(index < condition.size())
+		   {
+			    condition.remove(index);
+		   }
+		   //condition.remove(index);
+	   }
+		
+		return condition;
+	}
 
     //indicate 2 strings - startFrom and endAt - which the parser will interpret as new flags and use to delimit the space to include in 
 	//condition or dynamic -RETURN ArrayList<KeystrokeData> instead???
-    public ArrayList<KeystrokeData> getCond(String startFrom, String endAt, BufferedReader bufferedReader) throws IOException 
+    /**
+	* 
+	* @param 
+	* @return 
+	**/
+	public ArrayList<KeystrokeData> getCond(String startFrom, String endAt, BufferedReader bufferedReader) throws IOException 
 	{
 	   GsonBuilder gsonBuilder = new GsonBuilder();  
        gsonBuilder.setLenient();  
