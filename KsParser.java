@@ -46,14 +46,14 @@ public class KsParser
 		}else if(args[0].equals("-add")){
 			ksp.addCondition(args[1], args[2], args[3], args[4]); 
 		}else if (args[0].equals("-rm")){
-			ksp.removeCondition(args[1], args[2], args[3], args[4]);
+			ksp.deleteFromFile(args[1], args[2], args[3]);
 		} else if(args[0].equals("-hp")){
 			System.out.println(" ");
 			System.out.println("TRANSLATE JSON: -tr NameOfFileToTranslate");
 			System.out.println("SHOW CONDITIONS: -sc NameOfFileToTranslate");
 			System.out.println("PARSE JSON: -pr FromFolder  ToFolder");
 			System.out.println("ADD CONDITION: -add Filename StartFrom EndAt ToCondition");
-			System.out.println("REMOVE FROM CONDITION: -rm Filename Flag StartFrom EndAt");
+			System.out.println("REMOVE FROM FILE: -rm Filename StartFrom EndAt");
 			System.out.println("HELP: -hp to know how the parser works");
 			System.out.println(" ");
 		}  
@@ -120,21 +120,25 @@ public class KsParser
 	* Main method. 
 	* @param 
 	**/
-	public void removeCondition(String filename, String flag, String startFrom, String endAt) throws IOException
+	public void deleteFromFile(String filename, String startFrom, String endAt) throws IOException
 	{
-		wp.deleteFromCond(filename, flag, startFrom, endAt);
+		wp.deleteFromFile(filename, startFrom, endAt);
 	}
 	
 	
-	/*
+	
+	
 	public void test()throws IOException
 	{
-		ArrayList<KeystrokeData> ks = sp.getCond("browncfox", "dogGdue", "GDYESVD", rks.getFiles("try/s4C/s4--1659614824kspattern.json"));
-		String serchString = sp.fromAscii(rks.getLetterCodes(ks));
-		System.out.println(serchString);
+		GsonBuilder gsonBuilder = new GsonBuilder();  
+        gsonBuilder.setLenient();  
+        Gson gson = gsonBuilder.create();
 		
-	} */
-	
-
-	
+		ArrayList<KeystrokeData> ksData = rks.getKsData(rks.getFiles("parsedFiles/s3CNOL11/s3-flami3.json"), gson);
+		ArrayList<KeystrokeData> del = sp.deleteFrom(ksData, "lightTrygvx" , "baise mere");
+		
+		String serchString = sp.fromAscii(rks.getLetterCodes(del));
+		
+		System.out.println(serchString);
+	} 
 }

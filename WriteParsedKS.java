@@ -30,21 +30,20 @@ public class WriteParsedKS
 	* @param 
 	* @return 
 	**/
-	public void deleteFromCond(String filename, String flag, String startFrom, String endAt) throws IOException
+	
+	//public void generateDynamic (String filename, String startFrom, String endAt){}
+	
+	public void deleteFromFile(String filename,	String startFrom, String endAt) throws IOException
 	{
 		GsonBuilder gsonBuilder = new GsonBuilder();  
         gsonBuilder.setLenient();  
         Gson gson = gsonBuilder.create();
 		
-		Type mapType = new TypeToken<LinkedHashMap<String, ArrayList<KeystrokeData>> >() {}.getType();
-		LinkedHashMap<String, ArrayList<KeystrokeData>> conditions = gson.fromJson(rks.getFiles(filename), mapType); 
-		//LinkedHashMap<String, ArrayList<KeystrokeData>> conditions = sp.fromCondition(rks.getFiles(filename), gson);
-		ArrayList<KeystrokeData> condition = conditions.get(flag);
-		Object value = conditions.remove(flag);
+		ArrayList<KeystrokeData> ksData = rks.getKsData(rks.getFiles(filename), gson);
+		ArrayList<KeystrokeData> fixedData = sp.deleteFrom(ksData, startFrom, endAt);
 		
-		ArrayList<KeystrokeData> newCondition = sp.deleteFrom(condition, startFrom, endAt);
-		conditions.put(flag, newCondition);
-		
+		LinkedHashMap<String, ArrayList<KeystrokeData>> conditions = new LinkedHashMap<String, ArrayList<KeystrokeData>>();
+		conditions.put("ksData", fixedData);
 		writer(conditions, filename.replace(".json","-MOD.json"), gson);
 	}
 	
@@ -62,7 +61,7 @@ public class WriteParsedKS
 		LinkedHashMap<String, ArrayList<KeystrokeData>> conditions = sp.fromCondition(rks.getFiles(filename), gson);
 		conditions.put(toCondition, sp.getCond(startFrom, endAt, rks.getFiles(filename)));
 		
-		writer(conditions, filename.replace("kspattern","MOD"), gson);
+		writer(conditions, filename.replace("kspattern","-MOD.json"), gson);
 	}
 	
 	

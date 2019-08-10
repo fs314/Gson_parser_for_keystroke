@@ -30,23 +30,37 @@ public class SplitCondition
 	* @param 
 	* @return 
 	**/
-	public ArrayList<KeystrokeData> deleteFrom(ArrayList<KeystrokeData> condition, String startFrom, String endAt)
+	public ArrayList<KeystrokeData> deleteFrom(ArrayList<KeystrokeData> ksData, String startFrom, String endAt)
 	{
-	   String serchString = fromAscii(rks.getLetterCodes(condition));
+	   ArrayList<KeystrokeData> fixedData = new ArrayList<KeystrokeData>();
+	   
+	   String serchString = fromAscii(rks.getLetterCodes(ksData));
 	   int minIndex = flagMinIndex(serchString, startFrom);
 	   int maxIndex = flagMaxIndex(serchString, endAt);
 	  
-        	  
-	   for(int index = minIndex; index<maxIndex; index++)
+   
+	   if(minIndex > 0)
 	   {
-		   if(index < condition.size())
+		    for(int i=0; i<minIndex; i++)
+			{
+				fixedData.add(ksData.get(i));
+			}
+
+			if(maxIndex<ksData.size())
+			{
+				for(int i=maxIndex; i<ksData.size(); i++)
+				{
+					fixedData.add(ksData.get(i));
+			    }
+			}
+			   
+	   } else if(minIndex==0){
+		   for(int i=maxIndex; i<ksData.size(); i++)
 		   {
-			    condition.remove(index);
+			   fixedData.add(ksData.get(i));
 		   }
-		   //condition.remove(index);
 	   }
-		
-		return condition;
+	return fixedData;	
 	}
 
     //indicate 2 strings - startFrom and endAt - which the parser will interpret as new flags and use to delimit the space to include in 
@@ -84,7 +98,6 @@ public class SplitCondition
 	**/
 	public LinkedHashMap<String, ArrayList<KeystrokeData>> fromDynamic(BufferedReader bufferedReader, Gson gson) throws IOException 
 	{
-		//results
 		LinkedHashMap<String, ArrayList<KeystrokeData>>  dynamicData = new LinkedHashMap<String, ArrayList<KeystrokeData>>(); 
         ArrayList<KeystrokeData> dynamicKS = new  ArrayList<KeystrokeData>();
 		
@@ -107,12 +120,15 @@ public class SplitCondition
 					{
 						dynamicKS.add(ksData.get(index));
 				    }	
-				} else if(i==validFlags.get("maxIdx").size()-1 && maxIndexCurr<serchString.length()) {
+				} 
+				
+				if(i==validFlags.get("maxIdx").size()-1 && maxIndexCurr<serchString.length()) {
 					for(int index=maxIndexCurr; index<serchString.length(); index++)
 				    {
 						dynamicKS.add(ksData.get(index));
 				    }
-			    } else if (i!=0 && minIndexCurr!=0){
+			    } 
+				if (i!=0 && minIndexCurr!=0){
 					for(int index=maxIndexPrev; index<minIndexCurr; index++)
 					{
 						dynamicKS.add(ksData.get(index));
@@ -143,7 +159,39 @@ public class SplitCondition
 		 }
 		 return conditionData;
 	 }
-	 
+	
+
+   /**
+	* 
+	* @param 
+	* @return 
+	**/
+	public LinkedHashMap<String, ArrayList<KeystrokeData>> fromCondition(ArrayList<KeystrokeData> ksData) //throws IOException 
+	{
+		LinkedHashMap<String, ArrayList<KeystrokeData>> conditions = new LinkedHashMap<String, ArrayList<KeystrokeData>>(8);
+		//ArrayList<KeystrokeData> ksData = rks.getKsData(bufferedReader, gson);
+		String serchString = fromAscii(rks.getLetterCodes(ksData));
+		
+		for(int i=0; i<getFlags().size(); i++) 
+		{
+			ArrayList<KeystrokeData> ksByCondition = new ArrayList<KeystrokeData>();
+			
+			int maxIndex = flagMaxIndex(serchString, getFlags().get(i));
+		    int minIndex = flagMinIndex(serchString, getFlags().get(i)); 
+			
+			if (maxIndex !=0 && minIndex+7 < maxIndex)
+			{
+				for(int index = minIndex; index< maxIndex; index++)
+				{
+					ksByCondition.add(ksData.get(index));
+				}
+				conditions.put(getFlags().get(i), ksByCondition);
+			} 
+		}
+		return conditions;
+	} 
+
+	
 	/**
 	* 
 	* @param 
