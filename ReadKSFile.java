@@ -16,8 +16,8 @@ import java.util.*;
 public class ReadKSFile  
 {
 	/**
-	* extracts primary code(ascii) of each keystroke data and returns them into an ArrayList
-	* @param ArrayList<KeystrokeData> 
+	* Extracts primary code(ascii) for each keystroke data and returns them into an ArrayList<Integer>.
+	* @param ArrayList<KeystrokeData> containing the details for each keystroke
 	* @return ArrayList<Integer> containing the primary code value of each keystroke in the original JSON file
 	**/
 	public ArrayList<Integer> getLetterCodes(ArrayList<KeystrokeData> ksData)
@@ -31,9 +31,9 @@ public class ReadKSFile
 	}
 	
 	/**
-	* 
-	* @param 
-	* @return 
+	* Returns an ArrayList of information associated to each keystroke in the JSON file being parsed.
+	* @param BufferedReader buffered file to be parsed and Gson gson object to parse a JSON to java class and begin deserialization of json file.
+	* @return ArrayList<KeystrokeData> containing information associated to each keystroke in the JSON file being parsed
 	**/
 	public ArrayList<KeystrokeData> getKsData (BufferedReader bufferedReader, Gson gson) 
 	{
@@ -53,9 +53,10 @@ public class ReadKSFile
 	
 	
 	/**
-	* 
-	* @param 
-	* @return 
+	* Returns a LinkedHashMap<String, ArrayList<KeystrokeData>> which specifies the correct parameterized type for the dynamic fields in the data 
+	* thus allowing Gson to parse the data. 
+	* @param BufferedReader buffered file to be parsed and Gson gson object to parse a JSON to java class and begin deserialization of json file.
+	* @return LinkedHashMap<String, ArrayList<KeystrokeData>> associating a label (often dyamically generated) to an ArrayList of keystrokeData
 	**/
 	public LinkedHashMap<String, ArrayList<KeystrokeData>> accessKsLabels(BufferedReader bufferedReader, Gson gson) 
 	{
@@ -67,9 +68,9 @@ public class ReadKSFile
 	}
 	
 	/**
-	* 
-	* @param 
-	* @return 
+	* Reads json file specified, buffering so as to provide efficient reading.
+	* @param String the name of the file to read
+	* @return BufferedReader buffered file to be parsed
 	**/
 	public BufferedReader getFiles(String filename) throws FileNotFoundException
 	{

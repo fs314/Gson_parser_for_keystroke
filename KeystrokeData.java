@@ -3,6 +3,9 @@
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+/**
+* Class representing all the data to be associated with one keystroke. 
+**/
 public class KeystrokeData{
 
     @SerializedName("KeyReleaseDelay")

@@ -30,8 +30,9 @@ public class KsParser
 	} 
 	
 	/**
-	* Main method. 
-	* @param 
+	* Starts the parser upon specification of the action to be carried out. 
+	* Type -hp to start to receive some guidance on how to use the parser. 
+	* @param String[] specifing the action to be carried out by parser. 
 	**/
 	public static void main (String[] args) throws IOException
 	{
@@ -50,19 +51,18 @@ public class KsParser
 		} else if(args[0].equals("-hp")){
 			System.out.println(" ");
 			System.out.println("TRANSLATE JSON: -tr NameOfFileToTranslate");
-			System.out.println("SHOW CONDITIONS: -sc NameOfFileToTranslate");
+			System.out.println("SHOW CONDITIONS: -sc NameOfFileToTranslateByCondition");
 			System.out.println("PARSE JSON: -pr FromFolder  ToFolder");
-			System.out.println("ADD CONDITION: -add Filename StartFrom EndAt ToCondition");
-			System.out.println("REMOVE FROM FILE: -rm Filename StartFrom EndAt");
+			System.out.println("ADD CONDITION: -add FileToModify StartAddingFrom EndAddingAt AddToCondition");
+			System.out.println("REMOVE FROM FILE: -rm FileToModify StartRemovingFrom EndRemovingAt");
 			System.out.println("HELP: -hp to know how the parser works");
 			System.out.println(" ");
 		}  
-		//ksp.test();
 	}
 	
 	/**
-	* Main method. 
-	* @param 
+	* Parses specified JSON files and creates a new parsed version for each at specified location.
+	* @param String the original location of the files to be parsed, String representing the destination path for the newly created parsed files.
 	**/
 	public void getParsedFiles(String originalPath, String destinationPath) 
 	{
@@ -75,8 +75,8 @@ public class KsParser
 	} 
 	
 	 /**
-	* Main method. 
-	* @param 
+	* Prints text originally typed by splitting it by the condition it belongs to. Text not belonging to any condition(dynamic) is not included.  
+	* @param String filename of file to be translated.
 	**/
 	public void showConditions(String filename) throws FileNotFoundException
 	{
@@ -94,8 +94,8 @@ public class KsParser
 	} 
 	
    /**
-	* Main method. 
-	* @param 
+	* Print text originally typed contained in JSON file by translating it from ascii.
+	* @param String filename of file to be translated.
 	**/
 	public void printContent(String filename) throws FileNotFoundException
 	{
@@ -108,8 +108,10 @@ public class KsParser
 	} 
 	
 	/**
-	* Main method. 
-	* @param 
+	* Allows to add a condition with data associated to it to a specified file. 
+	* The name of the new condition has to be specified as well as the start and end "flags" which delimit the new conditon data.
+	* @param String filename of file to be modified, String indicating from where to start include data to new condition, String indicating where to stop the inclusion,
+    * String representing the name of the new condition. 
 	**/
 	public void addCondition (String filename, String startFrom, String endAt, String toCondition) throws IOException
 	{
@@ -117,28 +119,12 @@ public class KsParser
 	}
 	
 	/**
-	* Main method. 
-	* @param 
+	* Allows to delete data from specified file.
+	* @param String filename of file to be modified, String indicating from where to start removal of data, String indicating where to stop removal.
 	**/
 	public void deleteFromFile(String filename, String startFrom, String endAt) throws IOException
 	{
 		wp.deleteFromFile(filename, startFrom, endAt);
 	}
 	
-	
-	
-	
-	public void test()throws IOException
-	{
-		GsonBuilder gsonBuilder = new GsonBuilder();  
-        gsonBuilder.setLenient();  
-        Gson gson = gsonBuilder.create();
-		
-		ArrayList<KeystrokeData> ksData = rks.getKsData(rks.getFiles("parsedFiles/s3CNOL11/s3-flami3.json"), gson);
-		ArrayList<KeystrokeData> del = sp.deleteFrom(ksData, "lightTrygvx" , "baise mere");
-		
-		String serchString = sp.fromAscii(rks.getLetterCodes(del));
-		
-		System.out.println(serchString);
-	} 
 }

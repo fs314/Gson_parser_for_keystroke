@@ -19,6 +19,9 @@ public class WriteParsedKS
 	ReadKSFile rks;
 	SplitCondition sp;
 	
+	/**
+	* Constructor
+	**/
 	public WriteParsedKS ()
 	{
 		rks = new ReadKSFile();
@@ -26,13 +29,10 @@ public class WriteParsedKS
 	}
 	
 	/**
-	* 
-	* @param 
-	* @return 
+	* Allows to delete data from specified file.
+	* Modified files will report the tag "-MOD" in their name.
+	* @param String filename of file to be modified, String indicating from where to start removal of data, String indicating where to stop removal.
 	**/
-	
-	//public void generateDynamic (String filename, String startFrom, String endAt){}
-	
 	public void deleteFromFile(String filename,	String startFrom, String endAt) throws IOException
 	{
 		GsonBuilder gsonBuilder = new GsonBuilder();  
@@ -48,9 +48,11 @@ public class WriteParsedKS
 	}
 	
 	/**
-	* 
-	* @param 
-	* @return 
+	* Allows to add a condition with data associated to it to a specified file. 
+	* The name of the new condition has to be specified as well as the start and end "flags" which delimit the new conditon data. 
+	* Modified files will report the tag "-MOD" in their name.
+	* @param String filename of file to be modified, String indicating from where to start include data to new condition, String indicating where to stop the inclusion,
+    * String representing the name of the new condition. 
 	**/
 	public void modifyParsedKS(String filename, String startFrom, String endAt, String toCondition) throws IOException
 	{
@@ -66,9 +68,8 @@ public class WriteParsedKS
 	
 	
 	/**
-	* 
-	* @param 
-	* @return 
+	* Creates new parsed files in a given location from files at specified location. 
+	* @param String representing path where files to be parsed are found, String representing the destination path where to write the parsed files 
 	**/
     public void createParsedKS(String originalPath, String destinationPath) throws FileNotFoundException
 	{
@@ -91,7 +92,7 @@ public class WriteParsedKS
 				{
 					copyFile(originalName, fileName + originalName.replace("/", "").replace(originalPath, ""));
 					
-					fileName += originalName.replace("/", "").replace(originalPath, "").replace(".json", "") + ".json"; //movedhere
+					fileName += originalName.replace("/", "").replace(originalPath, "").replace(".json", "") + ".json"; 
 				
 					writer(fromCondition, ppsFolder+"-static.json", gson);
 					writer(dynamicData, ppsFolder+"-dynamic.json", gson);
@@ -111,9 +112,9 @@ public class WriteParsedKS
 	} 
 	
    /**
-	* 
-	* @param 
-	* @return 
+	* Writes a new file containing parsed JSON data.
+	* @param Object to be deserialized, String represeting filename of new file to be created 
+	* and Gson gson object to parse a JSON to java class and begin deserialization of json file.
 	**/
 	public void writer(Object obj, String filename, Gson gson) 
 	{
@@ -127,9 +128,9 @@ public class WriteParsedKS
 	
 	
 	/**
-	* 
-	* @param 
-	* @return 
+	* Extracts names of files contained in specified folder and organizes them in an ArrayList<String> to return them.
+	* @param  String representing path of folder containing files to parse
+	* @return ArrayList<String> of file names found in a specified folder
 	**/
 	public ArrayList<String> filesForFolder(String originalPath)
 	{
@@ -149,9 +150,10 @@ public class WriteParsedKS
 	}
 	
 	/**
-	* 
-	* @param 
-	* @return 
+	* Creates a new folder at specified path and with a given name
+	* @param String representing the name of the folder(the participant number), String representing the destination path of new folder, 
+	* BufferedReader buffered file to be parsed and Gson gson object to parse a JSON to java class and begin deserialization of json file.
+	* @return String representing the path and file name of new folder
 	**/
 	public String makePPSFolder(String ppsNumber, String destinationPath, BufferedReader bufferedReader, Gson gson) 
 	{
@@ -164,9 +166,8 @@ public class WriteParsedKS
 	
 	
 	/**
-	* 
-	* @param 
-	* @return 
+	* Copies a specified file from one location to another. 
+	* @param String representing the path where file is originally located, String representing destination path of file-copy
 	**/
 	 public void copyFile(String from, String to) throws IOException{
         Path src = Paths.get(from);

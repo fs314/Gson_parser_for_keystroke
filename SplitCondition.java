@@ -26,9 +26,9 @@ public class SplitCondition
 	}
 	
 	/**
-	* 
-	* @param 
-	* @return 
+	* Removes data from an ArrayList<KeystrokeData> starting from and ending at position specified by user.
+	* @param ArrayList<KeystrokeData> containing keystroke data associated with one JSON file, String indicating from where to start removal of data in ArrayList<KeystrokeData>, String indicating where to stop removal. 
+	* @return ArrayList<KeystrokeData> only containing data that has not been removed.
 	**/
 	public ArrayList<KeystrokeData> deleteFrom(ArrayList<KeystrokeData> ksData, String startFrom, String endAt)
 	{
@@ -63,12 +63,10 @@ public class SplitCondition
 	return fixedData;	
 	}
 
-    //indicate 2 strings - startFrom and endAt - which the parser will interpret as new flags and use to delimit the space to include in 
-	//condition or dynamic -RETURN ArrayList<KeystrokeData> instead???
     /**
-	* 
-	* @param 
-	* @return 
+	* Takes two user defined Strings - startFrom and endAt - which the parser will interpret as new flags and use to delimit data to be stored in an ArrayList<KeystrokeData>.
+	* @param String indicating from where to start include data in ArrayList<KeystrokeData>, String indicating where to stop the inclusion, BufferedReader buffered file to be parsed.  
+	* @return ArrayList<KeystrokeData> all the data contained in two user defined flags. 
 	**/
 	public ArrayList<KeystrokeData> getCond(String startFrom, String endAt, BufferedReader bufferedReader) throws IOException 
 	{
@@ -92,9 +90,10 @@ public class SplitCondition
 	}
 	
 	/**
-	* 
-	* @param 
-	* @return 
+	* Extracts all the data in JSON file that is not associated to any condition and returns it in a LinkedHashMap<String, ArrayList<KeystrokeData>>(for simplicity in serialization and deserialization)
+    * where the key is the String "dynamicKS".
+	* @param BufferedReader buffered file to be parsed and Gson gson object to parse a JSON to java class and begin deserialization of json file.
+	* @return LinkedHashMap<String, ArrayList<KeystrokeData>> associating the String "dynamicKS" to all the data that is not associated to any condition in JSON file. 
 	**/
 	public LinkedHashMap<String, ArrayList<KeystrokeData>> fromDynamic(BufferedReader bufferedReader, Gson gson) throws IOException 
 	{
@@ -142,9 +141,10 @@ public class SplitCondition
 	} 
 
    /**
-	* 
-	* @param 
-	* @return 
+	* Extracts all the data from JSON file that is associated to certain study conditions 
+	* and returns it all together in an ArrayList<KeystrokeData>
+	* @param LinkedHashMap<String, ArrayList<KeystrokeData>> containing all the data in the JSON file that has been associated to at least one condition
+	* @return ArrayList<KeystrokeData> containing all the data from JSON file that has been associated to t least one or more conditions.
 	**/
      public ArrayList<KeystrokeData> getConditionData(LinkedHashMap<String, ArrayList<KeystrokeData>> fromCondition) 
 	 {
@@ -162,9 +162,11 @@ public class SplitCondition
 	
 
    /**
-	* 
-	* @param 
-	* @return 
+    * Splits the data contained in JSON file according to the condition it belongs to by looking for occurences of each flag associated to a condition 
+	* and extracting all the data that is contained between the first and last occurrence as an ArrayList<KeystrokeData>. 
+	* It then sorts it and returns it as an LinkedHashMap<String, ArrayList<KeystrokeData>> where the key represents the flag associated to the ArrayList<KeystrokeData>.  
+	* @param ArrayList<KeystrokeData> containing all keystrokeData associated to each keystroke. 
+	* @return LinkedHashMap<String, ArrayList<KeystrokeData>> associating the flag for each condition to the keystroke data relative to that condition.
 	**/
 	public LinkedHashMap<String, ArrayList<KeystrokeData>> fromCondition(ArrayList<KeystrokeData> ksData) //throws IOException 
 	{
@@ -193,9 +195,11 @@ public class SplitCondition
 
 	
 	/**
-	* 
-	* @param 
-	* @return 
+	* Splits the data contained in JSON file according to the condition it belongs to by looking for occurences of each flag associated to a condition 
+	* and extracting all the data that is contained between the first and last occurrence as an ArrayList<KeystrokeData>. 
+	* It then sorts it and returns it as an LinkedHashMap<String, ArrayList<KeystrokeData>> where the key represents the flag associated to the ArrayList<KeystrokeData>.   
+	* @param BufferedReader buffered file to be parsed and Gson gson object to parse a JSON to java class and begin deserialization of json file.
+	* @return LinkedHashMap<String, ArrayList<KeystrokeData>> associating the flag for each condition to the keystroke data relative to that condition.
 	**/
 	public LinkedHashMap<String, ArrayList<KeystrokeData>> fromCondition(BufferedReader bufferedReader, Gson gson) throws IOException 
 	{
@@ -224,9 +228,10 @@ public class SplitCondition
 	
 	
    /**
-	* 
-	* @param 
-	* @return 
+	* Finds and returns the anonymous code inputed by the participant by looking for two occurences of the flag "code" 
+	* and returning the substring within them. If no anonymous code is found then returns a "C".
+	* @param BufferedReader buffered file to be parsed and Gson gson object to parse a JSON to java class and begin deserialization of json file.
+	* @return String representing the anonymous code inputted by participant.
 	**/
 	public String getAnonCode(BufferedReader bufferedReader, Gson gson)
 	{
@@ -253,9 +258,10 @@ public class SplitCondition
 	}
 	
    /**
-	* 
-	* @param 
-	* @return 
+	* Returns a LinkedHashMap<String, ArrayList<Integer>> associates each flag to the maximum and minimum indexes at which it occurred in a given strings
+	* @param String string to be searched
+	* @return LinkedHashMap<String, ArrayList<Integer>> associating the name of a flag 
+	* to the maximum and minimum index of occurence in the given string
 	**/
 	public LinkedHashMap<String, ArrayList<Integer>> getValidFlags(String fromAscii) 
 	{
@@ -282,9 +288,9 @@ public class SplitCondition
 	}
 	
 	/**
-	* 
-	* @param 
-	* @return 
+	* Sorts the int elements(Indexes) of a given ArrayList<Integer> with the smaller values at the smallest indexes of  the ArrayList.
+	* @param ArrayList<Integer> of Integers to sort in ascending order
+	* @return ArrayList<Integer> with values sorted in ascending order 
 	**/
 	public ArrayList<Integer> sortAscending(ArrayList<Integer> indexes)
 	{
@@ -311,9 +317,9 @@ public class SplitCondition
 	}
 	
     /**
-	* 
-	* @param 
-	* @return 
+	* Returns the substring enclosed between the first and last occurrences of a given flag into a given string. 
+	* @param String string to be searched and String string to be looked for in the other given string.
+	* @return String substring enclosed between two (or more) occurrences of a string, currFlag, into a given string, fromAscii.
 	**/
 	public String flagDelimiter(String fromAscii, String currFlag)
 	{
@@ -330,9 +336,9 @@ public class SplitCondition
 	}
 	
 	/**
-	* 
-	* @param 
-	* @return 
+	* Finds all the occurrences of a given flag into a given string and returns the start index of the first found flag. 
+	* @param String string to be searched and String string to be looked for in the other given string.
+	* @return Integer of minimum index of given flag
 	**/
 	public int flagMinIndex(String fromAscii, String currFlag) 
 	{
@@ -362,9 +368,9 @@ public class SplitCondition
 	
 	
 	/**
-	* 
-	* @param 
-	* @return 
+	* Finds all occurrences of a given flag into a given string and returns the end index of the last found flag. 
+	* @param String string to be searched and String string to be looked for in the other given string.
+	* @return Integer of maximum index of given flag
 	**/
 	public int flagMaxIndex(String fromAscii, String currFlag) 
 	{
@@ -394,9 +400,9 @@ public class SplitCondition
 
 	
 	/**
-	* 
-	* @param 
-	* @return 
+	* Counts the time a given flag is found within a given string. 
+	* @param String string to be searched and String string to be looked for in the other given string.
+	* @return Integer number of time currFlag has occurred within the given string, fromAscii
 	**/
 	public int flagOccurence(String fromAscii, String currFlag) 
 	{
@@ -412,9 +418,9 @@ public class SplitCondition
 	}
 	
 	/**
-	* 
-	* @param 
-	* @return 
+	* Returns text originally typed translating it from ascii.
+	* @param ArrayList<Integer> containing the letter codes (ascii) associated to each keystroke in JSON file being parsed.
+	* @return String where the content of JSON file are decoded into text
 	**/
 	public String fromAscii(ArrayList<Integer> letterCodes) 
 	{
@@ -432,9 +438,8 @@ public class SplitCondition
 	}
 	
 	/**
-	* 
-	* @param 
-	* @return 
+	* Gets the list of flags contained in the enum class and returns it as an ArrayList<String>
+	* @return an ArrayList<String> of flags. 
 	**/
 	public ArrayList<String> getFlags() 
 	{
